@@ -29,16 +29,15 @@ router.post('/notes/new-note', async (req, res) => {
     const newNote = new Note({ title, description })
     console.log(newNote)
     await newNote.save()
+    req.flash('success_msg', 'Note Add Success')
     res.redirect('/notes')
   }
   
 })
 
 router.get('/notes', async (req, res) => {
-
   const notes = await Note.find().sort({date: 'desc'})
   res.render('notes/all-notes', { notes })
-
 })
 
 router.get('/notes/edit/:id', async (req, res) => {
@@ -50,11 +49,13 @@ router.get('/notes/edit/:id', async (req, res) => {
 router.put('/notes/edit-note/:id', async (req, res) => {
   const { title, description } = req.body
   await Note.findByIdAndUpdate(req.params.id, { title, description })
+  req.flash('success_msg', 'Note Edit Success')
   res.redirect('/notes')
 })
 
 router.delete('/notes/delete/:id', async (req, res) => {
   await Note.findByIdAndDelete(req.params.id)
+  req.flash('success_msg', 'Note Delete Success')
   res.redirect('/notes')
 })
 
